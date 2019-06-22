@@ -1,7 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import "./index.css";
-import  TodoListPage from "./TodoListPage";
+import TodoListPage from "./TodoListPage";
 import * as serviceWorker from "./serviceWorker";
 
 const todoItems = [
@@ -12,9 +12,20 @@ const todoItems = [
   {
     id: 2,
     title: "デートする"
+  },
+  {
+    id: 3,
+    title: "サバゲーする"
+  },
+  {
+    id: 4,
+    title: "プログラミングする"
   }
 ];
-ReactDOM.render(<TodoListPage />, document.getElementById("root"));
+ReactDOM.render(
+  <TodoListPage todoItems={todoItems} />,
+  document.getElementById("root")
+);
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.
