@@ -6,19 +6,15 @@ import * as serviceWorker from "./serviceWorker";
 
 const todoItems = [
   {
-    id: 1,
     title: "買い物に行く"
   },
   {
-    id: 2,
     title: "デートする"
   },
   {
-    id: 3,
     title: "サバゲーする"
   },
   {
-    id: 4,
     title: "プログラミングする"
   }
 ];

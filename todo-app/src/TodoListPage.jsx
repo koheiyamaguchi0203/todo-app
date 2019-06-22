@@ -4,7 +4,7 @@ import InsertTodo from "./InsertTodo";
 class TodoListPage extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { ...props };
+    this.state = { todoItems: props.todoItems };
   }
 
   render() {
@@ -12,7 +12,13 @@ class TodoListPage extends React.Component {
       <React.Fragment>
         <h1>TodoApplication</h1>
         <h2>InsertTodo</h2>
-        <InsertTodo />
+        <InsertTodo
+          handleOnClick={todoItem => {
+            this.setState(state => {
+              return { todoItems: [...state.todoItems, todoItem] };
+            });
+          }}
+        />
         <h2>SortTodo</h2>
         <div>
           <div>Todoのものだけ表示する</div>
