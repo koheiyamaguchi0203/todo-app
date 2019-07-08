@@ -1,5 +1,4 @@
 import React from "react";
-import { EventEmitter } from "events";
 
 class TodoItem extends React.Component {
   constructor(props) {
@@ -15,6 +14,15 @@ class TodoItem extends React.Component {
       todoItem: { id: this.state.todoItem.id, title: event.target.value }
     });
   };
+
+  componentDidUpdate(prevProps, prevState) {
+    if (prevProps.todoItem.id !== this.props.todoItem.id) {
+      this.setState({
+        todoItem: this.props.todoItem,
+        onClick: prevState.onClick
+      });
+    }
+  }
 
   render() {
     if (this.state.onClick) {
@@ -48,12 +56,13 @@ class TodoItem extends React.Component {
     } else {
       return (
         <React.Fragment>
+          {/* {console.log(this.state.todoItem)} */}
+          {/* {console.log(this.props.todoItem)} */}
           <div onClick={() => this.setState({ onClick: true })}>
             ID:{this.state.todoItem.id}
             <br />
             Title:{this.state.todoItem.title}
           </div>
-          <br />
         </React.Fragment>
       );
     }

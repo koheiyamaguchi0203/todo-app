@@ -9,10 +9,13 @@ class TodoListPage extends React.Component {
   }
 
   lastTodoItemId = () => {
-    let todoItemsById = this.state.todoItems.sort(
-      (todoItemOne, todoItemTwo) => todoItemOne >= todoItemTwo
-    );
-    return todoItemsById.slice(-1)[0].id;
+    if (this.state.todoItems.length !== 0) {
+      let todoItemsById = this.state.todoItems.sort(
+        (todoItemOne, todoItemTwo) => todoItemOne >= todoItemTwo
+      );
+      return todoItemsById.slice(-1)[0].id;
+    }
+    return 0;
   };
 
   render() {
@@ -35,21 +38,40 @@ class TodoListPage extends React.Component {
           <div>全て表示する</div>
         </div>
         <h2>ListTodo</h2>
+        {/* {console.log(this.state.todoItems)} */}
         {this.state.todoItems.map((todoItem, index) => (
-          <TodoItem
-            todoItem={todoItem}
-            handleOnClick={updateTodoItem => {
-              let todoItems = this.state.todoItems.map(todoItem => {
-                if (todoItem.id === updateTodoItem.id) {
-                  return updateTodoItem;
-                } else {
-                  return todoItem;
-                }
-              });
-              this.setState({ todoItems: todoItems });
-            }}
-            key={index}
-          />
+          <div key={index}>
+            {/* {console.log(todoItem)} */}
+            <TodoItem
+              todoItem={todoItem}
+              handleOnClick={updateTodoItem => {
+                let todoItems = this.state.todoItems.map(todoItem => {
+                  if (todoItem.id === updateTodoItem.id) {
+                    return updateTodoItem;
+                  } else {
+                    return todoItem;
+                  }
+                });
+                this.setState({ todoItems: todoItems });
+              }}
+            />
+            <div
+              onClick={() =>
+                this.setState(prevState => {
+                  let newTodoItems = prevState.todoItems.filter(
+                    newTodoItem => todoItem.id !== newTodoItem.id
+                  );
+                  // console.log(...newTodoItems);
+                  return {
+                    todoItems: [...newTodoItems]
+                  };
+                })
+              }
+            >
+              削除する
+            </div>
+            <br />
+          </div>
         ))}
       </React.Fragment>
     );
