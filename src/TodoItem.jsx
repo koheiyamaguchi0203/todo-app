@@ -56,8 +56,6 @@ class TodoItem extends React.Component {
     } else {
       return (
         <React.Fragment>
-          {/* {console.log(this.state.todoItem)} */}
-          {/* {console.log(this.props.todoItem)} */}
           <div onClick={() => this.setState({ onClick: true })}>
             ID:{this.state.todoItem.id}
             <br />
