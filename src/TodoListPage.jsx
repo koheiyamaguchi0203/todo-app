@@ -5,7 +5,7 @@ import TodoItem from "./TodoItem";
 class TodoListPage extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { todoItems: props.todoItems };
+    this.state = { todoItems: props.todoItems, archivedList: false };
   }
 
   lastTodoItemId = () => {
@@ -16,6 +16,30 @@ class TodoListPage extends React.Component {
       return todoItemsById.slice(-1)[0].id;
     }
     return 0;
+  };
+
+  sortedList = todoItems => {
+    if (this.state.archivedList) {
+      let archivedTodoItems = todoItems.filter(todoItem => todoItem.archived);
+      return archivedTodoItems;
+    } else {
+      let notArchivedtodoItems = todoItems.filter(
+        todoItem => !todoItem.archived
+      );
+      return notArchivedtodoItems;
+    }
+  };
+
+  allList = todoItems => {
+    return this.state.todoItems;
+  };
+
+  listTitle = () => {
+    if (this.state.archivedList) {
+      return "Archived List";
+    } else {
+      return "TodoList";
+    }
   };
 
   render() {
@@ -33,15 +57,21 @@ class TodoListPage extends React.Component {
         />
         <h2>SortTodo</h2>
         <div>
-          <div>Todoのものだけ表示する</div>
-          <div>Archiveされたものだけを表示する</div>
-          <div>全て表示する</div>
+          <div
+            onClick={() =>
+              this.setState(prevState => {
+                return { archivedList: !prevState.archivedList };
+              })
+            }
+          >
+            {this.state.archivedList
+              ? "Archived TodoItems"
+              : "Not Archvied TodoItems"}
+          </div>
         </div>
-        <h2>ListTodo</h2>
-        {/* {console.log(this.state.todoItems)} */}
-        {this.state.todoItems.map((todoItem, index) => (
+        <h2>{this.listTitle()}</h2>
+        {this.sortedList(this.state.todoItems).map((todoItem, index) => (
           <div key={index}>
-            {/* {console.log(todoItem)} */}
             <TodoItem
               todoItem={todoItem}
               handleOnClick={updateTodoItem => {
@@ -61,7 +91,6 @@ class TodoListPage extends React.Component {
                   let newTodoItems = prevState.todoItems.filter(
                     newTodoItem => todoItem.id !== newTodoItem.id
                   );
-                  // console.log(...newTodoItems);
                   return {
                     todoItems: [...newTodoItems]
                   };
@@ -69,6 +98,23 @@ class TodoListPage extends React.Component {
               }
             >
               削除する
+            </div>
+            <div
+              onClick={() => {
+                this.setState(prevState => {
+                  let archivedTodoItems = prevState.todoItems.map(
+                    prevTodoItem => {
+                      if (prevTodoItem.id === todoItem.id) {
+                        prevTodoItem.archived = !prevTodoItem.archived;
+                      }
+                      return prevTodoItem;
+                    }
+                  );
+                  return { todoItems: archivedTodoItems };
+                });
+              }}
+            >
+              {todoItem.archived ? "Todo" : "Archive"}
             </div>
             <br />
           </div>
