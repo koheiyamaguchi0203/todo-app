@@ -5,13 +5,18 @@ class InsertTodo extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      todoItem: { id: "", title: "" }
+      todoItem: { id: "", title: "", createdAt: "", archived: false }
     };
   }
 
   handleOnChange = event => {
     this.setState({
-      todoItem: { id: this.props.lastTodoItemId + 1, title: event.target.value }
+      todoItem: {
+        id: this.props.lastTodoItemId + 1,
+        title: event.target.value,
+        createdAt: new Date().toLocaleDateString(),
+        archived: false
+      }
     });
   };
 

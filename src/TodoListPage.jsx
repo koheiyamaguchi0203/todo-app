@@ -30,10 +30,6 @@ class TodoListPage extends React.Component {
     }
   };
 
-  allList = todoItems => {
-    return this.state.todoItems;
-  };
-
   listTitle = () => {
     if (this.state.archivedList) {
       return "Archived List";
@@ -55,7 +51,7 @@ class TodoListPage extends React.Component {
           }}
           lastTodoItemId={this.lastTodoItemId()}
         />
-        <h2>SortTodo</h2>
+        <h2>Change List</h2>
         <div>
           <div
             onClick={() =>
@@ -69,6 +65,10 @@ class TodoListPage extends React.Component {
               : "Not Archvied TodoItems"}
           </div>
         </div>
+        <h2>Sort TodoItems</h2>
+        <div>Sort By ID</div>
+        <div>Sort By Title</div>
+        <div>Sort By Created At</div>
         <h2>{this.listTitle()}</h2>
         {this.sortedList(this.state.todoItems).map((todoItem, index) => (
           <div key={index}>

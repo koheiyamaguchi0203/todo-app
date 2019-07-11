@@ -60,6 +60,9 @@ class TodoItem extends React.Component {
             ID:{this.state.todoItem.id}
             <br />
             Title:{this.state.todoItem.title}
+            <br />
+            {console.log(this.state.todoItem.createdAt)}
+            Created At:{this.state.todoItem.createdAt}
           </div>
         </React.Fragment>
       );

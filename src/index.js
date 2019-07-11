@@ -4,26 +4,32 @@ import "./index.css";
 import TodoListPage from "./TodoListPage";
 import * as serviceWorker from "./serviceWorker";
 
+const date = new Date()
+
 const todoItems = [
   {
     id: 1,
     title: "買い物に行く",
-    archived: false
+    archived: false,
+    createdAt: new Date(date.setDate(10)).toLocaleDateString()
   },
   {
     id: 2,
     title: "デートする",
-    archived: false
+    archived: false,
+    createdAt: new Date(date.setDate(9)).toLocaleDateString()
   },
   {
     id: 3,
     title: "サバゲーする",
-    archived: false
+    archived: false,
+    createdAt: new Date(date.setDate(8)).toLocaleDateString()
   },
   {
     id: 4,
     title: "プログラミングする",
-    archived: false
+    archived: false,
+    createdAt: new Date(date.setDate(7)).toLocaleDateString()
   }
 ];
 ReactDOM.render(
