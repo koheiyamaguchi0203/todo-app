@@ -61,8 +61,8 @@ class TodoItem extends React.Component {
             <br />
             Title:{this.state.todoItem.title}
             <br />
-            {console.log(this.state.todoItem.createdAt)}
-            Created At:{this.state.todoItem.createdAt}
+            Created At:
+            {new Date(this.state.todoItem.createdAt).toLocaleDateString()}
           </div>
         </React.Fragment>
       );

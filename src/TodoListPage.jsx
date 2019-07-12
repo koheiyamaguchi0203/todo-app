@@ -38,6 +38,36 @@ class TodoListPage extends React.Component {
     }
   };
 
+  descSortBy(key) {
+    this.setState(prevState => {
+      let sortedList = prevState.todoItems.sort((todoItemOne, todoItemTwo) => {
+        if (todoItemOne[key] > todoItemTwo[key]) {
+          return 1;
+        } else if (todoItemOne[key] === todoItemTwo[key]) {
+          return 0;
+        } else {
+          return -1;
+        }
+      });
+      return { todoItems: sortedList, archivedList: prevState.archivedList };
+    });
+  }
+
+  ascSortBy(key) {
+    this.setState(prevState => {
+      let sortedList = prevState.todoItems.sort((todoItemOne, todoItemTwo) => {
+        if (todoItemOne[key] < todoItemTwo[key]) {
+          return 1;
+        } else if (todoItemOne[key] === todoItemTwo[key]) {
+          return 0;
+        } else {
+          return -1;
+        }
+      });
+      return { todoItems: sortedList, archivedList: prevState.archivedList };
+    });
+  }
+
   render() {
     return (
       <React.Fragment>
@@ -67,8 +97,14 @@ class TodoListPage extends React.Component {
         </div>
         <h2>Sort TodoItems</h2>
         <div>Sort By ID</div>
+        <div onClick={() => this.descSortBy("id")}>・desc</div>
+        <div onClick={() => this.ascSortBy("id")}>・asc</div>
         <div>Sort By Title</div>
+        <div onClick={() => this.descSortBy("title")}>・desc</div>
+        <div onClick={() => this.ascSortBy("title")}>・asc</div>
         <div>Sort By Created At</div>
+        <div onClick={() => this.descSortBy("createdAt")}>・desc</div>
+        <div onClick={() => this.ascSortBy("createdAt")}>・asc</div>
         <h2>{this.listTitle()}</h2>
         {this.sortedList(this.state.todoItems).map((todoItem, index) => (
           <div key={index}>
