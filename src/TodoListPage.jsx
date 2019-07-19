@@ -38,10 +38,10 @@ class TodoListPage extends React.Component {
     }
   };
 
-  descSortBy(key) {
+  sortBy(key, order) {
     this.setState(prevState => {
       let sortedList = prevState.todoItems.sort((todoItemOne, todoItemTwo) => {
-        if (todoItemOne[key] > todoItemTwo[key]) {
+        if (this.descOrascCondition(todoItemOne, todoItemTwo, key, order)) {
           return 1;
         } else if (todoItemOne[key] === todoItemTwo[key]) {
           return 0;
@@ -53,19 +53,40 @@ class TodoListPage extends React.Component {
     });
   }
 
-  ascSortBy(key) {
-    this.setState(prevState => {
-      let sortedList = prevState.todoItems.sort((todoItemOne, todoItemTwo) => {
-        if (todoItemOne[key] < todoItemTwo[key]) {
-          return 1;
-        } else if (todoItemOne[key] === todoItemTwo[key]) {
-          return 0;
-        } else {
-          return -1;
-        }
-      });
-      return { todoItems: sortedList, archivedList: prevState.archivedList };
+  descOrascCondition(todoItemOne, todoItemTwo, key, order) {
+    if (order === "desc") {
+      return todoItemOne[key] > todoItemTwo[key];
+    } else if (order === "asc") {
+      return todoItemOne[key] < todoItemTwo[key];
+    }
+  }
+
+  returnSortTodoItems() {
+    return (
+      <>
+        <h2>Sort TodoItems</h2>
+        {["id", "title", "createdAt"].map((sortKey, index) => {
+          return (
+            <React.Fragment key={index}>
+              <div>Sort By {sortKey}</div>
+              <div onClick={() => this.sortBy(sortKey, "desc")}>・desc</div>
+              <div onClick={() => this.sortBy(sortKey, "asc")}>・asc</div>
+            </React.Fragment>
+          );
+        })}
+      </>
+    );
+  }
+
+  updateTodoItem(updateTodoItem) {
+    let todoItems = this.state.todoItems.map(todoItem => {
+      if (todoItem.id === updateTodoItem.id) {
+        return updateTodoItem;
+      } else {
+        return todoItem;
+      }
     });
+    this.setState({ todoItems: todoItems });
   }
 
   render() {
@@ -95,31 +116,13 @@ class TodoListPage extends React.Component {
               : "Not Archvied TodoItems"}
           </div>
         </div>
-        <h2>Sort TodoItems</h2>
-        <div>Sort By ID</div>
-        <div onClick={() => this.descSortBy("id")}>・desc</div>
-        <div onClick={() => this.ascSortBy("id")}>・asc</div>
-        <div>Sort By Title</div>
-        <div onClick={() => this.descSortBy("title")}>・desc</div>
-        <div onClick={() => this.ascSortBy("title")}>・asc</div>
-        <div>Sort By Created At</div>
-        <div onClick={() => this.descSortBy("createdAt")}>・desc</div>
-        <div onClick={() => this.ascSortBy("createdAt")}>・asc</div>
+        {this.returnSortTodoItems()}
         <h2>{this.listTitle()}</h2>
         {this.sortedList(this.state.todoItems).map((todoItem, index) => (
           <div key={index}>
             <TodoItem
               todoItem={todoItem}
-              handleOnClick={updateTodoItem => {
-                let todoItems = this.state.todoItems.map(todoItem => {
-                  if (todoItem.id === updateTodoItem.id) {
-                    return updateTodoItem;
-                  } else {
-                    return todoItem;
-                  }
-                });
-                this.setState({ todoItems: todoItems });
-              }}
+              handleOnClick={() => this.updateTodoItem(todoItem)}
             />
             <div
               onClick={() =>
