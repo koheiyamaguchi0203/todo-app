@@ -79,14 +79,39 @@ class TodoListPage extends React.Component {
   }
 
   updateTodoItem(updateTodoItem) {
-    let todoItems = this.state.todoItems.map(todoItem => {
-      if (todoItem.id === updateTodoItem.id) {
-        return updateTodoItem;
-      } else {
-        return todoItem;
-      }
+    this.setState(prevState => {
+      let todoItems = prevState.todoItems.map(todoItem => {
+        if (todoItem.id === updateTodoItem.id) {
+          return updateTodoItem;
+        } else {
+          return todoItem;
+        }
+      });
+      return { todoItems: todoItems };
     });
-    this.setState({ todoItems: todoItems });
+  }
+
+  deleteTodoItem(todoItem) {
+    this.setState(prevState => {
+      let newTodoItems = prevState.todoItems.filter(
+        newTodoItem => todoItem.id !== newTodoItem.id
+      );
+      return {
+        todoItems: [...newTodoItems]
+      };
+    });
+  }
+
+  archiveTodo(todoItem) {
+    this.setState(prevState => {
+      let archivedTodoItems = prevState.todoItems.map(prevTodoItem => {
+        if (prevTodoItem.id === todoItem.id) {
+          prevTodoItem.archived = !prevTodoItem.archived;
+        }
+        return prevTodoItem;
+      });
+      return { todoItems: archivedTodoItems };
+    });
   }
 
   render() {
@@ -122,40 +147,10 @@ class TodoListPage extends React.Component {
           <div key={index}>
             <TodoItem
               todoItem={todoItem}
-              handleOnClick={() => this.updateTodoItem(todoItem)}
+              updateTodoItem={() => this.updateTodoItem(todoItem)}
+              deleteTodoItem={() => this.deleteTodoItem(todoItem)}
+              archiveTodo={() => this.archiveTodo(todoItem)}
             />
-            <div
-              onClick={() =>
-                this.setState(prevState => {
-                  let newTodoItems = prevState.todoItems.filter(
-                    newTodoItem => todoItem.id !== newTodoItem.id
-                  );
-                  return {
-                    todoItems: [...newTodoItems]
-                  };
-                })
-              }
-            >
-              削除する
-            </div>
-            <div
-              onClick={() => {
-                this.setState(prevState => {
-                  let archivedTodoItems = prevState.todoItems.map(
-                    prevTodoItem => {
-                      if (prevTodoItem.id === todoItem.id) {
-                        prevTodoItem.archived = !prevTodoItem.archived;
-                      }
-                      return prevTodoItem;
-                    }
-                  );
-                  return { todoItems: archivedTodoItems };
-                });
-              }}
-            >
-              {todoItem.archived ? "Todo" : "Archive"}
-            </div>
-            <br />
           </div>
         ))}
       </React.Fragment>

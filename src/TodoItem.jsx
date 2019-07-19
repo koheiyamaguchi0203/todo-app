@@ -10,9 +10,10 @@ class TodoItem extends React.Component {
   }
 
   handleOnChange = event => {
-    this.setState({
-      todoItem: { id: this.state.todoItem.id, title: event.target.value }
-    });
+    event.persist();
+    this.setState(prevState => ({
+      todoItem: { ...prevState.todoItem, title: event.target.value }
+    }));
   };
 
   componentDidUpdate(prevProps, prevState) {
@@ -27,7 +28,7 @@ class TodoItem extends React.Component {
   render() {
     if (this.state.onClick) {
       return (
-        <div>
+        <React.Fragment>
           ID:{this.state.todoItem.id}
           <br />
           <input
@@ -36,22 +37,24 @@ class TodoItem extends React.Component {
               this.handleOnChange(event);
             }}
           />
+          <br />
+          Created At:
+          {new Date(this.state.todoItem.createdAt).toLocaleDateString()}
           <div
             onClick={() => {
-              this.setState(state => ({
+              this.setState(prevState => ({
                 todoItem: {
-                  id: state.todoItem.id,
-                  title: state.todoItem.title
+                  ...prevState.todoItem
                 },
                 onClick: false
               }));
-              this.props.handleOnClick(this.state.todoItem);
+              this.props.updateTodoItem(this.state.todoItem);
               this.setState({ onClick: false });
             }}
           >
             保存する
           </div>
-        </div>
+        </React.Fragment>
       );
     } else {
       return (
@@ -63,6 +66,12 @@ class TodoItem extends React.Component {
             <br />
             Created At:
             {new Date(this.state.todoItem.createdAt).toLocaleDateString()}
+            <br />
+            <div onClick={() => this.props.deleteTodoItem()}>削除する</div>
+            <div onClick={() => this.props.archiveTodo(this.state.todoItem)}>
+              {this.state.todoItem.archived ? "Todo" : "Archive"}
+            </div>
+            <br />
           </div>
         </React.Fragment>
       );

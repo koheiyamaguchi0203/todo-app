@@ -1,5 +1,4 @@
 import React from "react";
-// import TodoInput from "./TodoInput";
 
 class InsertTodo extends React.Component {
   constructor(props) {
@@ -14,7 +13,8 @@ class InsertTodo extends React.Component {
       todoItem: {
         id: this.props.lastTodoItemId + 1,
         title: event.target.value,
-        createdAt: new Date().toLocaleDateString(),
+        // UnixTimeを入れているのはJSの日付の比較する時になんか困ったから。どうして困ったのかは覚えてない。
+        createdAt: new Date().getTime(),
         archived: false
       }
     });
