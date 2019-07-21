@@ -5,7 +5,7 @@ import TodoItem from "./TodoItem";
 class TodoListPage extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { todoItems: props.todoItems, archivedList: false };
+    this.state = { todoItems: [], archivedList: false };
   }
 
   lastTodoItemId = () => {

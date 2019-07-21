@@ -7,9 +7,7 @@ todo_path  PATCH   /api/v1/todos/:id                      TodoAppApiWeb.TodoCont
 todo_path  DELETE  /api/v1/todos/:id                      TodoAppApiWeb.TodoController :delete
 */
 
-export const getApiV1Todos = () => "localhost:4000/api/v1/todos";
-export const postApiV1Todos = () => "localhost:4000/api/v1/todos";
-export const patchApiV1Todos = params =>
-  `localhost:4000/api/v1/todos/${params.id}`;
-export const deleteApiV1Todos = params =>
-  `localhost:4000/api/v1/todos/${params.id}`;
+export const getApiV1Todos = () => "/api/v1/todos";
+export const postApiV1Todos = () => "/api/v1/todos";
+export const patchApiV1Todos = params => `/api/v1/todos/${params.id}`;
+export const deleteApiV1Todos = params => `/api/v1/todos/${params.id}`;
