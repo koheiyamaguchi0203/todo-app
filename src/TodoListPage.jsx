@@ -1,6 +1,8 @@
 import React from "react";
 import InsertTodo from "./InsertTodo";
 import TodoItem from "./TodoItem";
+import axios from "axios";
+import { getApiV1Todos } from "./routes";
 
 class TodoListPage extends React.Component {
   constructor(props) {
@@ -41,7 +43,7 @@ class TodoListPage extends React.Component {
   sortBy(key, order) {
     this.setState(prevState => {
       let sortedList = prevState.todoItems.sort((todoItemOne, todoItemTwo) => {
-        if (this.descOrascCondition(todoItemOne, todoItemTwo, key, order)) {
+        if (this.orderCondition(todoItemOne, todoItemTwo, key, order)) {
           return 1;
         } else if (todoItemOne[key] === todoItemTwo[key]) {
           return 0;
@@ -53,7 +55,7 @@ class TodoListPage extends React.Component {
     });
   }
 
-  descOrascCondition(todoItemOne, todoItemTwo, key, order) {
+  orderCondition(todoItemOne, todoItemTwo, key, order) {
     if (order === "desc") {
       return todoItemOne[key] > todoItemTwo[key];
     } else if (order === "asc") {
@@ -112,6 +114,26 @@ class TodoListPage extends React.Component {
       });
       return { todoItems: archivedTodoItems };
     });
+  }
+
+  componentDidMount() {
+    axios
+      .get(getApiV1Todos())
+      .then(response => {
+        console.log(response);
+        let todoItems = response.data.data.map(todoItem => {
+          return {
+            ...todoItem,
+            createdAt: new Date(todoItem.inserted_at).getTime()
+          };
+        });
+        this.setState(prevState => {
+          return { ...prevState, todoItems: todoItems };
+        });
+      })
+      .catch(error => {
+        console.log(error);
+      });
   }
 
   render() {
