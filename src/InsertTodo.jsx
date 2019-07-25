@@ -11,9 +11,11 @@ class InsertTodo extends React.Component {
   handleOnChange = event => {
     this.setState({
       todoItem: {
-        id: this.props.lastTodoItemId + 1,
         title: event.target.value,
-        // UnixTimeを入れているのはJSの日付の比較する時になんか困ったから。どうして困ったのかは覚えてない。
+        // UnixTimeを入れているのはJSの日付の比較する時になんか困ったから。
+        // new Date("2019-07-19T15:28:23") === new Date("2019-07-19T15:28:23")
+        // false
+        // 上のようになるから、困った。
         createdAt: new Date().getTime(),
         archived: false
       }

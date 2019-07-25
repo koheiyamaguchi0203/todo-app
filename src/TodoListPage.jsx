@@ -2,23 +2,13 @@ import React from "react";
 import InsertTodo from "./InsertTodo";
 import TodoItem from "./TodoItem";
 import axios from "axios";
-import { getApiV1Todos } from "./routes";
+import { getApiV1Todos, postApiV1Todos } from "./routes";
 
 class TodoListPage extends React.Component {
   constructor(props) {
     super(props);
     this.state = { todoItems: [], archivedList: false };
   }
-
-  lastTodoItemId = () => {
-    if (this.state.todoItems.length !== 0) {
-      let todoItemsById = this.state.todoItems.sort(
-        (todoItemOne, todoItemTwo) => todoItemOne >= todoItemTwo
-      );
-      return todoItemsById.slice(-1)[0].id;
-    }
-    return 0;
-  };
 
   sortedList = todoItems => {
     if (this.state.archivedList) {
@@ -120,11 +110,12 @@ class TodoListPage extends React.Component {
     axios
       .get(getApiV1Todos())
       .then(response => {
-        console.log(response);
         let todoItems = response.data.data.map(todoItem => {
           return {
-            ...todoItem,
-            createdAt: new Date(todoItem.inserted_at).getTime()
+            id: todoItem.id,
+            title: todoItem.title,
+            archived: todoItem.archived,
+            createdAt: new Date(todoItem.created_at * 1000).getTime()
           };
         });
         this.setState(prevState => {
@@ -142,12 +133,33 @@ class TodoListPage extends React.Component {
         <h1>TodoApplication</h1>
         <h2>InsertTodo</h2>
         <InsertTodo
-          handleOnClick={todoItem => {
-            this.setState(state => ({
-              todoItems: [...state.todoItems, todoItem]
-            }));
-          }}
-          lastTodoItemId={this.lastTodoItemId()}
+          handleOnClick={todoItem =>
+            axios
+              .post(postApiV1Todos(), {
+                todo: {
+                  title: todoItem.title,
+                  archived: todoItem.archived
+                }
+              })
+              .then(response => {
+                let todoItem = response.data.data;
+                this.setState(prevState => {
+                  return {
+                    todoItems: [
+                      ...prevState.todoItems,
+                      {
+                        id: todoItem.id,
+                        title: todoItem.title,
+                        archived: todoItem.archived,
+                        createdAt: new Date(
+                          todoItem.created_at * 1000
+                        ).getTime()
+                      }
+                    ]
+                  };
+                });
+              })
+          }
         />
         <h2>Change List</h2>
         <div>
