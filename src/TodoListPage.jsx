@@ -10,8 +10,12 @@ class TodoListPage extends React.Component {
     this.state = { todoItems: [], archivedList: false };
   }
 
+  // filterしている。もっと言えば、archiveのfilterでしかない。
+  // そもそも引数が必要なくて、todoItemsはthis.state.todoItemsでやれば良いんじゃね？
+  // letではなく、constでした方が良い。
   sortedList = todoItems => {
     if (this.state.archivedList) {
+      // 変数必要なくね？
       let archivedTodoItems = todoItems.filter(todoItem => todoItem.archived);
       return archivedTodoItems;
     } else {
@@ -89,6 +93,7 @@ class TodoListPage extends React.Component {
         newTodoItem => todoItem.id !== newTodoItem.id
       );
       return {
+        // これ、変数展開する必要がないので、そのまま変数渡せばいい。
         todoItems: [...newTodoItems]
       };
     });
@@ -110,6 +115,7 @@ class TodoListPage extends React.Component {
     axios
       .get(getApiV1Todos())
       .then(response => {
+        // この形式はjsonの決まりらしい。後でググる。
         let todoItems = response.data.data.map(todoItem => {
           return {
             id: todoItem.id,
@@ -134,6 +140,8 @@ class TodoListPage extends React.Component {
         <h1>TodoApplication</h1>
         <h2>InsertTodo</h2>
         <InsertTodo
+          // これは切り出す。
+          // 
           handleOnClick={todoItem =>
             axios
               .post(postApiV1Todos(), {
@@ -180,11 +188,12 @@ class TodoListPage extends React.Component {
         <h2>{this.listTitle()}</h2>
         {this.sortedList(this.state.todoItems).map((todoItem, index) => (
           <div key={index}>
+            {/* こうした方がいい。 */}
             <TodoItem
               todoItem={todoItem}
-              updateTodoItem={() => this.updateTodoItem(todoItem)}
-              deleteTodoItem={() => this.deleteTodoItem(todoItem)}
-              archiveTodo={() => this.archiveTodo(todoItem)}
+              updateTodoItem={() => { this.updateTodoItem(todoItem) }}
+              deleteTodoItem={() => { this.deleteTodoItem(todoItem) }}
+              archiveTodo={() => { this.archiveTodo(todoItem) }}
             />
           </div>
         ))}
