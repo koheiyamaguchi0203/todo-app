@@ -5,7 +5,7 @@ import axios from "axios";
 import { getApiV1Todos, postApiV1Todos } from "./routes";
 
 class TodoListPage extends React.Component {
-  constructor(props) {
+  constructor (props) {
     super(props);
     this.state = { todoItems: [], archivedList: false };
   }
@@ -115,7 +115,7 @@ class TodoListPage extends React.Component {
             id: todoItem.id,
             title: todoItem.title,
             archived: todoItem.archived,
-            createdAt: new Date(todoItem.created_at * 1000).getTime()
+            createdAt: new Date(todoItem.inserted_at * 1000).getTime()
           };
         });
         this.setState(prevState => {
@@ -123,6 +123,7 @@ class TodoListPage extends React.Component {
         });
       })
       .catch(error => {
+        // errorをいい感じにAPI側から渡せば良いのか分かってないので、consoleに出すだけにしている。
         console.log(error);
       });
   }
@@ -152,7 +153,7 @@ class TodoListPage extends React.Component {
                         title: todoItem.title,
                         archived: todoItem.archived,
                         createdAt: new Date(
-                          todoItem.created_at * 1000
+                          todoItem.inserted_at * 1000
                         ).getTime()
                       }
                     ]
