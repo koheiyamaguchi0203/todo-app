@@ -5,7 +5,7 @@ import axios from "axios";
 import { getApiV1Todos, postApiV1Todos } from "./routes";
 
 class TodoListPage extends React.Component {
-  constructor (props) {
+  constructor(props) {
     super(props);
     this.state = { todoItems: [], archivedList: false };
   }
@@ -13,7 +13,7 @@ class TodoListPage extends React.Component {
   // filterしている。もっと言えば、archiveのfilterでしかない。
   // そもそも引数が必要なくて、todoItemsはthis.state.todoItemsでやれば良いんじゃね？
   // letではなく、constでした方が良い。
-  sortedList = todoItems => {
+  filterList = todoItems => {
     if (this.state.archivedList) {
       // 変数必要なくね？
       let archivedTodoItems = todoItems.filter(todoItem => todoItem.archived);
@@ -74,7 +74,7 @@ class TodoListPage extends React.Component {
     );
   }
 
-  updateTodoItem(updateTodoItem) {
+  updateTodoItem = updateTodoItem => {
     this.setState(prevState => {
       let todoItems = prevState.todoItems.map(todoItem => {
         if (todoItem.id === updateTodoItem.id) {
@@ -85,9 +85,9 @@ class TodoListPage extends React.Component {
       });
       return { todoItems: todoItems };
     });
-  }
+  };
 
-  deleteTodoItem(todoItem) {
+  deleteTodoItem = todoItem => {
     this.setState(prevState => {
       let newTodoItems = prevState.todoItems.filter(
         newTodoItem => todoItem.id !== newTodoItem.id
@@ -97,9 +97,9 @@ class TodoListPage extends React.Component {
         todoItems: [...newTodoItems]
       };
     });
-  }
+  };
 
-  archiveTodo(todoItem) {
+  archiveTodo = todoItem => {
     this.setState(prevState => {
       let archivedTodoItems = prevState.todoItems.map(prevTodoItem => {
         if (prevTodoItem.id === todoItem.id) {
@@ -109,7 +109,7 @@ class TodoListPage extends React.Component {
       });
       return { todoItems: archivedTodoItems };
     });
-  }
+  };
 
   componentDidMount() {
     axios
@@ -141,7 +141,7 @@ class TodoListPage extends React.Component {
         <h2>InsertTodo</h2>
         <InsertTodo
           // これは切り出す。
-          // 
+          //
           handleOnClick={todoItem =>
             axios
               .post(postApiV1Todos(), {
@@ -186,14 +186,14 @@ class TodoListPage extends React.Component {
         </div>
         {this.returnSortTodoItems()}
         <h2>{this.listTitle()}</h2>
-        {this.sortedList(this.state.todoItems).map((todoItem, index) => (
+        {this.filterList(this.state.todoItems).map((todoItem, index) => (
           <div key={index}>
             {/* こうした方がいい。 */}
             <TodoItem
               todoItem={todoItem}
-              updateTodoItem={() => { this.updateTodoItem(todoItem) }}
-              deleteTodoItem={() => { this.deleteTodoItem(todoItem) }}
-              archiveTodo={() => { this.archiveTodo(todoItem) }}
+              updateTodoItem={this.updateTodoItem}
+              deleteTodoItem={this.deleteTodoItem}
+              archiveTodo={this.archiveTodo}
             />
           </div>
         ))}

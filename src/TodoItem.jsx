@@ -67,7 +67,9 @@ class TodoItem extends React.Component {
             Created At:
             {new Date(this.state.todoItem.createdAt).toLocaleDateString()}
             <br />
-            <div onClick={() => this.props.deleteTodoItem()}>削除する</div>
+            <div onClick={() => this.props.deleteTodoItem(this.state.todoItem)}>
+              削除する
+            </div>
             {/* これに統一する */}
             <div onClick={() => this.props.archiveTodo(this.state.todoItem)}>
               {this.state.todoItem.archived ? "Todo" : "Archive"}
