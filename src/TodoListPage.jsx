@@ -108,7 +108,7 @@ class TodoListPage extends React.Component {
       );
       return {
         // これ、変数展開する必要がないので、そのまま変数渡せばいい。
-        todoItems: [...newTodoItems]
+        todoItems: newTodoItems
       };
     });
   };
@@ -121,6 +121,7 @@ class TodoListPage extends React.Component {
         }
         return prevTodoItem;
       });
+      console.log(archivedTodoItems);
       return { todoItems: archivedTodoItems };
     });
   };

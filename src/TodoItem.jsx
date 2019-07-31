@@ -20,7 +20,7 @@ class TodoItem extends React.Component {
   componentDidUpdate(prevProps, prevState) {
     if (prevProps.todoItem.id !== this.props.todoItem.id) {
       this.setState({
-        todoItemTitle: "",
+        todoItemTitle: prevProps.todoItem.title,
         isEditing: prevState.isEditing
       });
     }
