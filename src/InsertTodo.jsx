@@ -33,8 +33,13 @@ class InsertTodo extends React.Component {
           type="button"
           value="Todoを作成する"
           onClick={() => {
-            this.setState({
-              todoItem: { id: "", title: "" }
+            this.setState(prevState => {
+              return {
+                todoItem: {
+                  ...prevState.todoItem,
+                  title: ""
+                }
+              };
             });
             this.props.handleOnClick(this.state.todoItem);
           }}

@@ -50,7 +50,7 @@ class TodoItem extends React.Component {
               }));
               this.props.updateTodoItem(
                 this.state.todoItemTitle,
-                this.props.todoItem.id
+                this.props.todoItem
               );
               this.setState({ isEditing: false });
             }}

@@ -2,7 +2,7 @@ import React from "react";
 import InsertTodo from "./InsertTodo";
 import TodoItem from "./TodoItem";
 import axios from "axios";
-import { getApiV1Todos, postApiV1Todos } from "./routes";
+import { getApiV1Todos, postApiV1Todos, patchApiV1Todos } from "./routes";
 
 class TodoListPage extends React.Component {
   constructor(props) {
@@ -74,17 +74,31 @@ class TodoListPage extends React.Component {
     );
   }
 
-  updateTodoItem = (updateTodoItemTitle, updateTodoItemId) => {
-    this.setState(prevState => {
-      let todoItems = prevState.todoItems.map(todoItem => {
-        if (todoItem.id === updateTodoItemId) {
-          return { ...todoItem, title: updateTodoItemTitle };
-        } else {
-          return todoItem;
+  updateTodoItem = (updateTodoItemTitle, updateTodoItem) => {
+    console.log(updateTodoItem);
+    axios
+      .patch(patchApiV1Todos(updateTodoItem), {
+        todo: {
+          title: updateTodoItemTitle,
+          archived: updateTodoItem.archived
         }
+      })
+      .then(response => {
+        let todoItem = response.data.data;
+        this.setState(prevState => {
+          return {
+            todoItems: [
+              ...prevState.todoItems,
+              {
+                id: todoItem.id,
+                title: todoItem.title,
+                archived: todoItem.archived,
+                createdAt: new Date(todoItem.inserted_at * 1000).getTime()
+              }
+            ]
+          };
+        });
       });
-      return { todoItems: todoItems };
-    });
   };
 
   deleteTodoItem = todoItem => {
@@ -109,6 +123,32 @@ class TodoListPage extends React.Component {
       });
       return { todoItems: archivedTodoItems };
     });
+  };
+
+  createTodoItem = todoItem => {
+    axios
+      .post(postApiV1Todos(), {
+        todo: {
+          title: todoItem.title,
+          archived: todoItem.archived
+        }
+      })
+      .then(response => {
+        let todoItem = response.data.data;
+        this.setState(prevState => {
+          return {
+            todoItems: [
+              ...prevState.todoItems,
+              {
+                id: todoItem.id,
+                title: todoItem.title,
+                archived: todoItem.archived,
+                createdAt: new Date(todoItem.inserted_at * 1000).getTime()
+              }
+            ]
+          };
+        });
+      });
   };
 
   componentDidMount() {
@@ -139,37 +179,7 @@ class TodoListPage extends React.Component {
       <React.Fragment>
         <h1>TodoApplication</h1>
         <h2>InsertTodo</h2>
-        <InsertTodo
-          // これは切り出す。
-          //
-          handleOnClick={todoItem =>
-            axios
-              .post(postApiV1Todos(), {
-                todo: {
-                  title: todoItem.title,
-                  archived: todoItem.archived
-                }
-              })
-              .then(response => {
-                let todoItem = response.data.data;
-                this.setState(prevState => {
-                  return {
-                    todoItems: [
-                      ...prevState.todoItems,
-                      {
-                        id: todoItem.id,
-                        title: todoItem.title,
-                        archived: todoItem.archived,
-                        createdAt: new Date(
-                          todoItem.inserted_at * 1000
-                        ).getTime()
-                      }
-                    ]
-                  };
-                });
-              })
-          }
-        />
+        <InsertTodo handleOnClick={this.createTodoItem} />
         <h2>Change List</h2>
         <div>
           <div
