@@ -74,11 +74,11 @@ class TodoListPage extends React.Component {
     );
   }
 
-  updateTodoItem = updateTodoItem => {
+  updateTodoItem = (updateTodoItemTitle, updateTodoItemId) => {
     this.setState(prevState => {
       let todoItems = prevState.todoItems.map(todoItem => {
-        if (todoItem.id === updateTodoItem.id) {
-          return updateTodoItem;
+        if (todoItem.id === updateTodoItemId) {
+          return { ...todoItem, title: updateTodoItemTitle };
         } else {
           return todoItem;
         }

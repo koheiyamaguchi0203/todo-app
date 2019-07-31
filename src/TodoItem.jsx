@@ -4,52 +4,55 @@ class TodoItem extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      todoItem: this.props.todoItem,
-      onClick: false
+      todoItemTitle: this.props.todoItem.title,
+      isEditing: false
     };
   }
 
   handleOnChange = event => {
     event.persist();
     this.setState(prevState => ({
-      todoItem: { ...prevState.todoItem, title: event.target.value }
+      todoItemTitle: event.target.value,
+      isEditing: prevState.isEditing
     }));
   };
 
   componentDidUpdate(prevProps, prevState) {
     if (prevProps.todoItem.id !== this.props.todoItem.id) {
       this.setState({
-        todoItem: this.props.todoItem,
-        onClick: prevState.onClick
+        todoItemTitle: "",
+        isEditing: prevState.isEditing
       });
     }
   }
 
   render() {
-    if (this.state.onClick) {
+    if (this.state.isEditing) {
       return (
         <React.Fragment>
-          ID:{this.state.todoItem.id}
+          ID:{this.props.todoItem.id}
           <br />
+          Title:
           <input
-            value={this.state.todoItem.title}
+            value={this.state.todoItemTitle}
             onChange={event => {
               this.handleOnChange(event);
             }}
           />
           <br />
           Created At:
-          {new Date(this.state.todoItem.createdAt).toLocaleDateString()}
+          {new Date(this.props.todoItem.createdAt).toLocaleDateString()}
           <div
             onClick={() => {
               this.setState(prevState => ({
-                todoItem: {
-                  ...prevState.todoItem
-                },
-                onClick: false
+                todoItemTitle: prevState.todoItemTitle,
+                isEditing: false
               }));
-              this.props.updateTodoItem(this.state.todoItem);
-              this.setState({ onClick: false });
+              this.props.updateTodoItem(
+                this.state.todoItemTitle,
+                this.props.todoItem.id
+              );
+              this.setState({ isEditing: false });
             }}
           >
             保存する
@@ -59,20 +62,20 @@ class TodoItem extends React.Component {
     } else {
       return (
         <React.Fragment>
-          <div onClick={() => this.setState({ onClick: true })}>
-            ID:{this.state.todoItem.id}
+          <div onClick={() => this.setState({ isEditing: true })}>
+            ID:{this.props.todoItem.id}
             <br />
-            Title:{this.state.todoItem.title}
+            Title:{this.state.todoItemTitle}
             <br />
             Created At:
-            {new Date(this.state.todoItem.createdAt).toLocaleDateString()}
+            {new Date(this.props.todoItem.createdAt).toLocaleDateString()}
             <br />
-            <div onClick={() => this.props.deleteTodoItem(this.state.todoItem)}>
+            <div onClick={() => this.props.deleteTodoItem(this.props.todoItem)}>
               削除する
             </div>
             {/* これに統一する */}
-            <div onClick={() => this.props.archiveTodo(this.state.todoItem)}>
-              {this.state.todoItem.archived ? "Todo" : "Archive"}
+            <div onClick={() => this.props.archiveTodo(this.props.todoItem)}>
+              {this.props.todoItem.archived ? "Todo" : "Archive"}
             </div>
             <br />
           </div>
