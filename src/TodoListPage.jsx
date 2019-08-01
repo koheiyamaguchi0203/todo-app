@@ -7,14 +7,14 @@ import { getApiV1Todos, postApiV1Todos, patchApiV1Todos } from "./routes";
 class TodoListPage extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { todoItems: [], archivedList: false };
+    this.state = { todoItems: [], isArchived: false };
   }
 
   // filterしている。もっと言えば、archiveのfilterでしかない。
   // そもそも引数が必要なくて、todoItemsはthis.state.todoItemsでやれば良いんじゃね？
   // letではなく、constでした方が良い。
   filterList = todoItems => {
-    if (this.state.archivedList) {
+    if (this.state.isArchived) {
       // 変数必要なくね？
       let archivedTodoItems = todoItems.filter(todoItem => todoItem.archived);
       return archivedTodoItems;
@@ -27,7 +27,7 @@ class TodoListPage extends React.Component {
   };
 
   listTitle = () => {
-    if (this.state.archivedList) {
+    if (this.state.isArchived) {
       return "Archived List";
     } else {
       return "TodoList";
@@ -45,7 +45,7 @@ class TodoListPage extends React.Component {
           return -1;
         }
       });
-      return { todoItems: sortedList, archivedList: prevState.archivedList };
+      return { todoItems: sortedList, isArchived: prevState.isArchived };
     });
   }
 
@@ -75,7 +75,6 @@ class TodoListPage extends React.Component {
   }
 
   updateTodoItem = (updateTodoItemTitle, updateTodoItem) => {
-    console.log(updateTodoItem);
     axios
       .patch(patchApiV1Todos(updateTodoItem), {
         todo: {
@@ -113,17 +112,29 @@ class TodoListPage extends React.Component {
     });
   };
 
-  archiveTodo = todoItem => {
-    this.setState(prevState => {
-      let archivedTodoItems = prevState.todoItems.map(prevTodoItem => {
-        if (prevTodoItem.id === todoItem.id) {
-          prevTodoItem.archived = !prevTodoItem.archived;
+  archiveTodo = archiveTodoItem => {
+    axios
+      .patch(patchApiV1Todos(archiveTodoItem), {
+        todo: {
+          title: archiveTodoItem.title,
+          archived: !archiveTodoItem.archived
         }
-        return prevTodoItem;
+      })
+      .then(response => {
+        let resTodoItem = response.data.data;
+        this.setState(prevState => {
+          let archivedTodoItems = prevState.todoItems.map(todoItem => {
+            if (todoItem.id === resTodoItem.id) {
+              return resTodoItem;
+            } else {
+              return todoItem;
+            }
+          });
+          return {
+            todoItems: archivedTodoItems
+          };
+        });
       });
-      console.log(archivedTodoItems);
-      return { todoItems: archivedTodoItems };
-    });
   };
 
   createTodoItem = todoItem => {
@@ -186,11 +197,11 @@ class TodoListPage extends React.Component {
           <div
             onClick={() =>
               this.setState(prevState => {
-                return { archivedList: !prevState.archivedList };
+                return { isArchived: !prevState.isArchived };
               })
             }
           >
-            {this.state.archivedList
+            {this.state.isArchived
               ? "Archived TodoItems"
               : "Not Archvied TodoItems"}
           </div>

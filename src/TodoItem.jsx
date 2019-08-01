@@ -57,28 +57,27 @@ class TodoItem extends React.Component {
           >
             保存する
           </div>
+          <br />
         </React.Fragment>
       );
     } else {
       return (
         <React.Fragment>
-          <div onClick={() => this.setState({ isEditing: true })}>
-            ID:{this.props.todoItem.id}
-            <br />
-            Title:{this.state.todoItemTitle}
-            <br />
-            Created At:
-            {new Date(this.props.todoItem.createdAt).toLocaleDateString()}
-            <br />
-            <div onClick={() => this.props.deleteTodoItem(this.props.todoItem)}>
-              削除する
-            </div>
-            {/* これに統一する */}
-            <div onClick={() => this.props.archiveTodo(this.props.todoItem)}>
-              {this.props.todoItem.archived ? "Todo" : "Archive"}
-            </div>
-            <br />
+          ID:{this.props.todoItem.id}
+          <br />
+          Title:{this.state.todoItemTitle}
+          <br />
+          Created At:
+          {new Date(this.props.todoItem.createdAt).toLocaleDateString()}
+          <br />
+          <div onClick={() => this.props.deleteTodoItem(this.props.todoItem)}>
+            削除する
           </div>
+          <div onClick={() => this.props.archiveTodo(this.props.todoItem)}>
+            {this.props.todoItem.archived ? "Todo" : "Archive"}
+          </div>
+          <div onClick={() => this.setState({ isEditing: true })}>編集する</div>
+          <br />
         </React.Fragment>
       );
     }
