@@ -2,7 +2,12 @@ import React from "react";
 import InsertTodo from "./InsertTodo";
 import TodoItem from "./TodoItem";
 import axios from "axios";
-import { getApiV1Todos, postApiV1Todos, patchApiV1Todos } from "./routes";
+import {
+  getApiV1Todos,
+  postApiV1Todos,
+  patchApiV1Todos,
+  deleteApiV1Todos
+} from "./routes";
 
 class TodoListPage extends React.Component {
   constructor(props) {
@@ -96,13 +101,15 @@ class TodoListPage extends React.Component {
   };
 
   deleteTodoItem = todoItem => {
-    this.setState(prevState => {
-      let newTodoItems = prevState.todoItems.filter(
-        newTodoItem => todoItem.id !== newTodoItem.id
-      );
-      return {
-        todoItems: newTodoItems
-      };
+    axios.delete(deleteApiV1Todos(todoItem)).then(() => {
+      this.setState(prevState => {
+        let newTodoItems = prevState.todoItems.filter(
+          newTodoItem => todoItem.id !== newTodoItem.id
+        );
+        return {
+          todoItems: newTodoItems
+        };
+      });
     });
   };
 
