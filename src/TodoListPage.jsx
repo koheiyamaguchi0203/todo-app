@@ -10,16 +10,11 @@ class TodoListPage extends React.Component {
     this.state = { todoItems: [], isArchived: false };
   }
 
-  // filterしている。もっと言えば、archiveのfilterでしかない。
-  // そもそも引数が必要なくて、todoItemsはthis.state.todoItemsでやれば良いんじゃね？
-  // letではなく、constでした方が良い。
-  filterList = todoItems => {
+  filterArchivedTodoItems = () => {
     if (this.state.isArchived) {
-      // 変数必要なくね？
-      let archivedTodoItems = todoItems.filter(todoItem => todoItem.archived);
-      return archivedTodoItems;
+      return this.state.todoItems.filter(todoItem => todoItem.archived);
     } else {
-      let notArchivedtodoItems = todoItems.filter(
+      const notArchivedtodoItems = this.state.todoItems.filter(
         todoItem => !todoItem.archived
       );
       return notArchivedtodoItems;
@@ -106,7 +101,6 @@ class TodoListPage extends React.Component {
         newTodoItem => todoItem.id !== newTodoItem.id
       );
       return {
-        // これ、変数展開する必要がないので、そのまま変数渡せばいい。
         todoItems: newTodoItems
       };
     });
@@ -188,7 +182,7 @@ class TodoListPage extends React.Component {
 
   render() {
     return (
-      <React.Fragment>
+      <>
         <h1>TodoApplication</h1>
         <h2>InsertTodo</h2>
         <InsertTodo handleOnClick={this.createTodoItem} />
@@ -208,9 +202,8 @@ class TodoListPage extends React.Component {
         </div>
         {this.returnSortTodoItems()}
         <h2>{this.listTitle()}</h2>
-        {this.filterList(this.state.todoItems).map((todoItem, index) => (
+        {this.filterArchivedTodoItems().map((todoItem, index) => (
           <div key={index}>
-            {/* こうした方がいい。 */}
             <TodoItem
               todoItem={todoItem}
               updateTodoItem={this.updateTodoItem}
@@ -219,7 +212,7 @@ class TodoListPage extends React.Component {
             />
           </div>
         ))}
-      </React.Fragment>
+      </>
     );
   }
 }

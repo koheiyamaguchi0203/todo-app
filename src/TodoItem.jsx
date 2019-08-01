@@ -29,7 +29,7 @@ class TodoItem extends React.Component {
   render() {
     if (this.state.isEditing) {
       return (
-        <React.Fragment>
+        <>
           ID:{this.props.todoItem.id}
           <br />
           Title:
@@ -58,11 +58,11 @@ class TodoItem extends React.Component {
             保存する
           </div>
           <br />
-        </React.Fragment>
+        </>
       );
     } else {
       return (
-        <React.Fragment>
+        <>
           ID:{this.props.todoItem.id}
           <br />
           Title:{this.state.todoItemTitle}
@@ -78,7 +78,7 @@ class TodoItem extends React.Component {
           </div>
           <div onClick={() => this.setState({ isEditing: true })}>編集する</div>
           <br />
-        </React.Fragment>
+        </>
       );
     }
   }
